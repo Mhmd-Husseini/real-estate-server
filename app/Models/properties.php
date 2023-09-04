@@ -19,4 +19,24 @@ class properties extends Model
         'address', 'latitude', 'longitude',
         'img1', 'img2', 'img3', 
     ];
+
+    public function user()
+    {
+    return $this->belongsTo(User::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function homeDetails()
+    {
+        return $this->hasOne(Home::class);
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
 }

@@ -58,9 +58,29 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
+
     public function getJWTCustomClaims()
     {
         return [];
     }
 
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
+
+    public function buyerMeetings()
+    {
+        return $this->hasMany(Meeting::class, 'buyer_id');
+    }
+
+    public function sellerMeetings()
+    {
+        return $this->hasMany(Meeting::class, 'seller_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

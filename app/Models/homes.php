@@ -15,4 +15,9 @@ class homes extends Model
         'bathrooms_nb', 
         'garages_nb',
     ];
+
+    public function property()
+    {
+    return $this->belongsTo(Property::class);
+    }
 }
