@@ -7,8 +7,17 @@ use App\Models\Home;
 
 class GuestController extends Controller
 {
-    public function getProperties(Request $request)
+    public function getProperties(Request $request, $id = null)
     {
+        if ($id !== null) {
+            $property = Property::with(['city', 'home'])->find($id);
+
+            if (!$property) {
+                return response()->json(['error' => 'Property not found'], 404);
+            }
+            return response()->json($property);
+        }
+
         $query = Property::query();
         $query->where('status', 'available');
 
@@ -16,7 +25,6 @@ class GuestController extends Controller
             $propertyType = $request->input('type');
             $query->where('type', $propertyType);
         }
-
         if ($request->has('city_name')) {
             $query->whereHas('city', function ($cityQuery) use ($request) {
                 $cityQuery->where('city', 'like', '%' . $request->input('city_name') . '%');
@@ -34,9 +42,7 @@ class GuestController extends Controller
         if ($request->has('max_area')) {
             $query->where('area', '<=', $request->input('max_area'));
         }
-
-        $properties = $query->with(['city', 'home'])->select(['id','title','price','area','img1','city_id'])->paginate(15);
-
+        $properties = $query->with(['city', 'home'])->select(['id', 'title', 'price', 'area', 'img1', 'city_id'])->paginate(15);
         return response()->json($properties);
     }
 }
