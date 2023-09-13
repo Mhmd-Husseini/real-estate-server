@@ -4,13 +4,16 @@ use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Models\City;
 use App\Models\Home;
+use App\Models\Transaction;
+use App\Models\Article;
+use App\Models\User;
 
 class GuestController extends Controller
 {
     public function getProperties(Request $request, $id = null)
     {
         if ($id !== null) {
-            $property = Property::with(['city', 'home'])->find($id);
+            $property = Property::with(['city', 'home', 'user'])->find($id);
 
             if (!$property) {
                 return response()->json(['error' => 'Property not found'], 404);
@@ -44,5 +47,22 @@ class GuestController extends Controller
         }
         $properties = $query->with(['city', 'home'])->select(['id', 'title', 'price', 'area', 'img1', 'city_id'])->paginate(15);
         return response()->json($properties);
+    }
+
+    public function getTransactionsAndArticles()
+    {
+        $transactions = Transaction::all();
+
+        $articles = Article::with('author')
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        $data = [
+            'transactions' => $transactions,
+            'articles' => $articles,
+        ];
+
+        return response()->json($data);
     }
 }

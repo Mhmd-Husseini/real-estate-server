@@ -13,4 +13,9 @@ class Article extends Model
         'title', 
         'content', 
     ];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

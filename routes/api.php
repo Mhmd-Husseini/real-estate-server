@@ -22,4 +22,5 @@ Route::group(["prefix" => "guest"], function(){
     Route::post("login", [AuthController::class, "login"]);
     Route::post("register", [AuthController::class, "register"]);
     Route::get('/properties/{id?}', [GuestController::class, 'getProperties']);
+    Route::get('/trends', [GuestController::class, 'getTransactionsAndArticles']);
 });
