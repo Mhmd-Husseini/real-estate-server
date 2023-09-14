@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('balconies_nb')->nullable();
             $table->integer('bathrooms_nb')->nullable();
             $table->integer('garages_nb')->nullable();
+            $table->timestamps();
 
             $table->foreign('property_id')->references('id')->on('properties');
         });
