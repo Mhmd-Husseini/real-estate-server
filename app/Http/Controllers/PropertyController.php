@@ -78,5 +78,12 @@ class PropertyController extends Controller
         return response()->json(['message' => 'Property created/updated successfully'], 201);
     }
 
-
+    public function getUserProperties(){
+        $user = Auth::user();
+        $properties = Property::where('user_id', $user->id)
+            ->with('home', 'city') 
+            ->get();
+    
+        return response()->json($properties);
+    }
 }
