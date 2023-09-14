@@ -14,6 +14,7 @@ Route::group(["middleware" => "auth:api"], function(){
         Route::post("logout", [AuthController::class, "logout"]);
         Route::post("refresh", [AuthController::class, "refresh"]);
         Route::post("addOrUpdate", [PropertyController::class, "AddOrUpdate"]);
+        Route::get("userProperties", [PropertyController::class, "getUserProperties"]);
     });
 
 });
