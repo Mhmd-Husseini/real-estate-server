@@ -19,13 +19,6 @@ class AuthController extends Controller{
         ], 200);
     }
 
-    public function issues(Request $request){
-        return response()->json([
-            'status' => 'Success',
-            'message' => 'AKAL',
-        ], 200);
-    }
-
     public function profile(Request $request){
         return response()->json([
             'status' => 'Success',
@@ -74,6 +67,7 @@ class AuthController extends Controller{
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->available_time = $request->available_time;
         $user->password = Hash::make($request->password);
         $user->save();
 
