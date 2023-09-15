@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\CalendarController;
 
 Route::group(["middleware" => "auth:api"], function(){
     
@@ -15,6 +16,7 @@ Route::group(["middleware" => "auth:api"], function(){
         Route::post("refresh", [AuthController::class, "refresh"]);
         Route::post("addOrUpdate", [PropertyController::class, "AddOrUpdate"]);
         Route::get("userProperties", [PropertyController::class, "getUserProperties"]);
+        Route::post("setAvailable", [CalendarController::class, "setAvailable"]);
     });
 
 });
