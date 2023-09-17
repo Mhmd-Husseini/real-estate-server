@@ -17,6 +17,7 @@ Route::group(["middleware" => "auth:api"], function(){
         Route::post("addOrUpdate", [PropertyController::class, "AddOrUpdate"]);
         Route::get("userProperties", [PropertyController::class, "getUserProperties"]);
         Route::post("setAvailable", [CalendarController::class, "setAvailable"]);
+        Route::post("bookMeeting", [CalendarController::class, "bookMeeting"]);
     });
 
 });

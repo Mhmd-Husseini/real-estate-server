@@ -12,9 +12,7 @@ class Meeting extends Model
         'buyer_id', 
         'seller_id', 
         'property_id', 
-        'requested_date1', 
-        'requested_date2', 
-        'requested_date3', 
+        'date',
         'status',
     ];
 
