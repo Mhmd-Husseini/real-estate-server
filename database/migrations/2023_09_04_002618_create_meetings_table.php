@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('meetings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('buyer_id')->nullable();
-            $table->unsignedBigInteger('seller_id')->nullable();
-            $table->unsignedBigInteger('property_id')->nullable();
-            $table->date('requested_date1')->nullable();
-            $table->date('requested_date2')->nullable();
-            $table->date('requested_date3')->nullable();
+            $table->unsignedBigInteger('buyer_id');
+            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('property_id');
+            $table->datetime('date');
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 
