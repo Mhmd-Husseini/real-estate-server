@@ -37,6 +37,6 @@ class Property extends Model
 
     public function meetings()
     {
-        return $this->hasMany(Meeting::class);
+        return $this->hasMany(Meeting::class, 'property_id');
     }
 }

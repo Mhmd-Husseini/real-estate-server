@@ -13,7 +13,7 @@ class GuestController extends Controller
     public function getProperties(Request $request, $id = null)
     {
         if ($id !== null) {
-            $property = Property::with(['city', 'home', 'user'])->find($id);
+            $property = Property::with(['city', 'home', 'user', 'meetings'])->find($id);
 
             if (!$property) {
                 return response()->json(['error' => 'Property not found'], 404);
