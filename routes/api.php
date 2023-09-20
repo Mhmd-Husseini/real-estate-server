@@ -18,6 +18,7 @@ Route::group(["middleware" => "auth:api"], function(){
         Route::get("userProperties", [PropertyController::class, "getUserProperties"]);
         Route::post("setAvailable", [CalendarController::class, "setAvailable"]);
         Route::post("bookMeeting", [CalendarController::class, "bookMeeting"]);
+        Route::get("meetings", [CalendarController::class, "getMeetings"]);
     });
 
 });
@@ -26,6 +27,7 @@ Route::group(["prefix" => "guest"], function(){
     Route::get("unauthorized", [AuthController::class, "unauthorized"])->name("unauthorized");
     Route::post("login", [AuthController::class, "login"]);
     Route::post("register", [AuthController::class, "register"]);
-    Route::get('/properties/{id?}', [GuestController::class, 'getProperties']);
-    Route::get('/trends', [GuestController::class, 'getTransactionsAndArticles']);
+    Route::get('properties/{id?}', [GuestController::class, 'getProperties']);
+    Route::get('trends', [GuestController::class, 'getTransactionsAndArticles']);
+    Route::get("profile", [AuthController::class, "profile"]);
 });

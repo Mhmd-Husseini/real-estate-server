@@ -20,10 +20,20 @@ class AuthController extends Controller{
     }
 
     public function profile(Request $request){
-        return response()->json([
-            'status' => 'Success',
-            'data' => Auth::user(),
-        ], 200);
+        $user = Auth::user();
+        if ($user) {
+            return response()->json([
+                'status' => 'Success',
+                'authenticated' => true,
+                'user' => $user,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'Success',
+                'authenticated' => false,
+                'user' => null,
+            ], 200);
+        }
     }
 
     public function login(Request $request){
