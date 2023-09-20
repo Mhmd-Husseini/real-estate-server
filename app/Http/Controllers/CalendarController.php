@@ -16,14 +16,11 @@ class CalendarController extends Controller
         $validatedData = $request->validate([
             'available_time' => 'required|json',
         ]);
-
         $user->available_time = $validatedData['available_time'];
         $user->save();
-
         return response()->json(['message' => 'Available time slots updated successfully']);
     }
 
-    
     public function bookMeeting(Request $request)
     {
         $buyer = Auth::user();
@@ -46,5 +43,17 @@ class CalendarController extends Controller
         $meeting->save();
         return response()->json(['message' => 'Meeting saved successfully'], 201);
     }   
+
+    public function getMeetings(Request $request)
+    {
+        $user = Auth::user();
+        $meetings = Meeting::where('seller_id', $user->id)
+            ->orWhere('buyer_id', $user->id)
+            ->with(['seller', 'buyer', 'property' => function ($query) {
+                $query->select('id', 'title', 'price', 'address');
+            }])
+            ->get();
+        return response()->json($meetings);
+    }
 }
 
