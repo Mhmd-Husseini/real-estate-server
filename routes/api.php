@@ -19,6 +19,7 @@ Route::group(["middleware" => "auth:api"], function(){
         Route::post("setAvailable", [CalendarController::class, "setAvailable"]);
         Route::post("bookMeeting", [CalendarController::class, "bookMeeting"]);
         Route::get("meetings", [CalendarController::class, "getMeetings"]);
+        Route::post("logout", [AuthController::class, "logout"]);
     });
 
 });

@@ -8,10 +8,6 @@ use App\Models\User;
 
 class AuthController extends Controller{
 
-    public function __construct(){
-        $this->middleware('auth:api', ['except' => ['login','register']]);
-    }
-
     public function unauthorized(Request $request){
         return response()->json([
             'status' => 'Error',
@@ -20,12 +16,11 @@ class AuthController extends Controller{
     }
 
     public function profile(Request $request){
-        $user = Auth::user();
-        if ($user) {
+        if (auth()->check()) {
             return response()->json([
                 'status' => 'Success',
                 'authenticated' => true,
-                'user' => $user,
+                'user' => auth()->user(),
             ], 200);
         } else {
             return response()->json([
