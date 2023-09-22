@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('role_id')->nullable();
+            $table->string('google_id')->nullable();;
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
             $table->string('name');
             $table->string('email')->unique();
