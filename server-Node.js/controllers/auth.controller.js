@@ -20,4 +20,49 @@ const login = (req, res) => {
     })
   }
 
-  module.exports = { login }
+  const register = async (req, res) => {
+    const { name, email, password, phone } = req.body;
+    
+    if (!name || !email || !password || !phone) {
+      return res.status(400).send({ message: 'All fields are required' });
+    }
+  
+    try {
+      const emailExists = await new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM USERS WHERE email = ?', [email], (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result.length > 0);
+          }
+        });
+      });
+  
+      if (emailExists) {
+        return res.status(409).send({ message: 'Email already registered' });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      connection.query(
+        'INSERT INTO USERS (name, email, password, phone, role_id) VALUES (?, ?, ?, ?, 1)',
+        [name, email, hashedPassword, phone, 1],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send({ message: 'Failed to register user' });
+          }
+  
+          const userInfo = { name, email, phone, role_id: 1 }; 
+          const token = jwt.sign(userInfo, process.env.JWT_SECRET);
+  
+          return res.status(201).send({ token, user: userInfo });
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: 'Something went wrong' });
+    }
+  };
+
+module.exports = { login, register }
