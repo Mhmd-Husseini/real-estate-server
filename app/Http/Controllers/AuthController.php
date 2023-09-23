@@ -99,6 +99,34 @@ class AuthController extends Controller{
         ]);
     }
 
+    public function updateUser(Request $request)
+{
+    $user = auth()->user();
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+        'phone' => 'required|string',
+    ]);
+
+    if ($request->has('password')) {
+        $request->validate([
+            'password' => 'required|string|min:6',
+        ]);
+        $user->password = Hash::make($request->password);
+    }
+
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
+    $user->save();
+
+    return response()->json([
+        'status' => 'Success',
+        'data' => $user,
+    ]);
+}
+
     public function redirectToAuth(): JsonResponse
     {
         return response()->json([

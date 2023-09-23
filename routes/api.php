@@ -24,12 +24,13 @@ Route::group(["middleware" => "auth:api"], function(){
     Route::group(["prefix" => "user"], function(){
         Route::post("logout", [AuthController::class, "logout"]);
         Route::post("refresh", [AuthController::class, "refresh"]);
+        Route::get("profile", [AuthController::class, "profile"]);
+        Route::post("updateUser", [AuthController::class, "updateUser"]);
         Route::post("addOrUpdate", [PropertyController::class, "AddOrUpdate"]);
         Route::get("userProperties", [PropertyController::class, "getUserProperties"]);
         Route::post("setAvailable", [CalendarController::class, "setAvailable"]);
         Route::post("bookMeeting", [CalendarController::class, "bookMeeting"]);
         Route::get("meetings", [CalendarController::class, "getMeetings"]);
-        Route::get("profile", [AuthController::class, "profile"]);
     });
 
 });
