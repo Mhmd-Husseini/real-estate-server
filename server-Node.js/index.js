@@ -5,6 +5,10 @@ const connection = require("./configs/db.connection")
 require("dotenv").config()
 app.use(express.json())
 
+const authRouter = require("./routes/auth.routes")
+
+app.use("/", authRouter)
+
 app.listen(8000, (err)=>{
     if(err){
         console.error(err)
