@@ -17,5 +17,18 @@ const getAllUsers = async (req, res) => {
       res.send(result[0])
     })
   }
+  const createUser = async (req, res) => {
+    const { role_id, password, name, phone, email } = req.body
+    const hashedPassword = await bcrypt.hash(password, 10);
+    connection.query("INSERT INTO USERS (role_id, name, phone, email, password) VALUES (?, ?, ?, ?, ?)", [role_id, name, phone, email, hashedPassword], (err, result) => {
+      if (err) console.log(err)
+      if (result.insertId) {
+        connection.query(`SELECT * FROM USERS WHERE id = ?`, [result.insertId], (err, result) => {
+          if (err) console.log(err)
+          res.send(result[0])
+        })
+      }
+    })
+  }
 
-module.exports = { getAllUsers, getUser }
+module.exports = { getAllUsers, getUser, createUser }
