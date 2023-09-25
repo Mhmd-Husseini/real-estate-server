@@ -65,4 +65,47 @@ const login = (req, res) => {
     }
   };
 
-module.exports = { login, register }
+  const getProfile = async (req, res) => {
+    const token = req.header('Authorization');
+
+    if (!token) {
+      return res.status(401).send({ message: 'Authorization token not provided' });
+    }
+    
+    try {
+      const tokenWithoutBearer = token.replace('Bearer ', '');
+      const decoded = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+      const userId = decoded.id;
+    
+      connection.query(
+        'SELECT * FROM USERS WHERE id = ?',
+        [userId],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send({ message: 'Internal Server Error' });
+          }
+    
+          if (result.length === 0) {
+            return res.status(404).send({ message: 'User not found' });
+          }
+    
+          const userWithoutPassword = {
+            id: result[0].id,
+            name: result[0].name,
+            email: result[0].email,
+            phone: result[0].phone,
+          };
+      
+          res.send(userWithoutPassword);
+        }        
+      );
+    } catch (error) {
+      console.log(error);
+      res.status(401).send({ message: 'Invalid token', token: token });
+    }
+  }
+  
+
+  
+module.exports = { login, register, getProfile, updateAdmin }
