@@ -106,6 +106,84 @@ const login = (req, res) => {
     }
   }
   
-
+  const updateAdmin = async (req, res) => {
+    const token = req.header('Authorization');
+  
+    if (!token) {
+      return res.status(401).json({ error: 'Authorization token not provided' });
+    }
+  
+    try {
+      const tokenWithoutBearer = token.replace('Bearer ', '');
+      const decoded = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+      const userId = decoded.id;
+  
+      const { password, name, phone, email } = req.body;
+      const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
+      const updateFields = [];
+      const queryParams = [];
+  
+      if (name) {
+        updateFields.push('name = ?');
+        queryParams.push(name);
+      }
+      if (email) {
+        updateFields.push('email = ?');
+        queryParams.push(email);
+      }
+      if (phone) {
+        updateFields.push('phone = ?');
+        queryParams.push(phone);
+      }
+      if (hashedPassword) {
+        updateFields.push('password = ?');
+        queryParams.push(hashedPassword);
+      }
+  
+      if (updateFields.length === 0) {
+        return res.status(400).json({ error: 'No fields to update' });
+      }
+  
+      connection.query(
+        'SELECT * FROM USERS WHERE id = ?',[userId],(err, userResult) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Failed to check user existence' });
+          }
+  
+          if (userResult.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+          }
+  
+          queryParams.push(userId);
+          const sql = `UPDATE USERS SET ${updateFields.join(', ')} WHERE id = ?`;
+          connection.query(sql, queryParams, (updateErr, result) => {
+            if (updateErr) {
+              console.error(updateErr);
+              return res.status(500).json({ error: 'Failed to update user' });
+            }
+            if (result.affectedRows > 0) {
+              connection.query(
+                'SELECT * FROM USERS WHERE id = ?',
+                [userId],
+                (fetchErr, userResult) => {
+                  if (fetchErr) {
+                    console.error(fetchErr);
+                    return res.status(500).json({ error: 'Failed to fetch updated user data' });
+                  }
+                  res.status(200).json({ status: 'success', user: userResult[0] });
+                }
+              );
+            } else {
+              res.status(404).json({ error: 'User not found' });
+            }
+          });
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(401).json({ error: 'Invalid token', token: token });
+    }
+  };
   
 module.exports = { login, register, getProfile, updateAdmin }
