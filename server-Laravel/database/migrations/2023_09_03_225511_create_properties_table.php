@@ -29,7 +29,7 @@ return new class extends Migration
             $table->decimal('longitude', 10, 6)->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities');
         });
     }

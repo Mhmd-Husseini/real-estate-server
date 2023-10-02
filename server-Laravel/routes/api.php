@@ -19,6 +19,7 @@ Route::group(["prefix" => "guest"], function(){
 Route::group(["middleware" => "auth:api"], function(){
     
     Route::group(["middleware" => "auth.admin"], function(){
+        // admin apis are coded in the Node.js server
     });
 
     Route::group(["prefix" => "user"], function(){
